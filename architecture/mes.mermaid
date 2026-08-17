@@ -1,0 +1,37 @@
+flowchart TB
+    OP["OP\n Operator"]
+    subgraph MOS["MOS (Manufacturing Operation System)"]
+        MRS["MRS\n(Manufacturing Rule System)"]
+        OFS["OFS\n(Operation Flow System)"]
+        RTD["RTD\nReal Time Dispatcher"]
+        DB["DB\nMES Data Base"]
+        MOI["MOI\nManufacturing Operation Interface"]
+    end
+
+    subgraph TC["TC (Tool Control)"]
+        MTC["MTC\nMovement Tool Control"]
+        PTC["PTC\nProcessing Tool Control"]
+
+    end
+    SPC["SPC\nStatistical Process Control"]
+    RMS["RMS\nRecipe Management System"]
+
+    %% OI
+    OP <--> MOI
+    MOI --> MRS
+    MOI --> OFS
+
+    %% Automatic Scenario
+    RTD --> OFS
+    MTC --> OFS
+    PTC --> OFS
+    RMS <--> OFS
+    MOI <--> OFS
+    DB --> OFS
+    DB --> RTD
+    OFS --> MRS
+    MOI <--> MRS
+    MRS --> DB
+
+    %% Statistic Data Processing
+    MRS --> SPC

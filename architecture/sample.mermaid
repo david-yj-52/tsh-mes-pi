@@ -1,0 +1,109 @@
+flowchart TB
+    %% ===== Nodes =====
+    MetaDB[("Meta DB")]
+    CacheDB[("Cache DB")]
+
+    SenderA["Sender #A"]
+    SenderB["Sender #B"]
+    SenderC["Sender #C"]
+
+    QMM["QMM"]
+    bwagent["bwagent"]
+
+    subgraph EMSGroup["Group of EMS Instances"]
+        EMS1["EMS #1"]
+        EMS2["EMS #2"]
+        EMS3["EMS #3"]
+        EMSNew["EMS #New"]
+    end
+
+    EMSCA["EMSCA"]
+    Manager(["Manager"])
+    Sportfire["SPORTFIRE 11.x"]
+    STR["STR 11.x"]
+
+    subgraph RecvA["Receiver Group #A [appspace]"]
+        RA1["Recv #1"]
+        RA2["Recv #2"]
+        RA3["Recv #3"]
+        RA4["Recv #4"]
+    end
+
+    subgraph RecvB["Receiver Group #B [appspace]"]
+        RB1["Recv #1"]
+        RB2["Recv #2"]
+        RB3["Recv #3"]
+        RB4["Recv #4"]
+    end
+
+    Mapping["Group of EMS Instances : Receiver Group
+    1 : 1
+    EMS #1 : Receiver #A
+    EMS #2 : Receiver #B
+    EMS #3 : Receiver #C
+    Etc..."]
+
+    %% ===== Sender <-> Meta DB / QMM =====
+    SenderA -- "Destination info" --> MetaDB
+    MetaDB -- "Cmd : Re-configure destination" --> SenderA
+
+    SenderA -- "Send to #1" --> QMM
+    SenderB -- "Send to #1" --> QMM
+    SenderC -- "Send to #2" --> QMM
+
+    %% ===== QMM <-> Meta DB =====
+    QMM -- "Register running EMS Instances
+    Ex) tcp://hostA:7222 | tcp://hostB:7223 | tcp://hostC:7224" --> MetaDB
+
+    %% ===== QMM <-> bwagent =====
+    QMM -- "Node Manage Command
+    Ex) Start, Stop Command S/O
+    Deploy Node, Application, Properties" --> bwagent
+    bwagent -- "Queue Distribute History and Count" --> CacheDB
+    CacheDB -- "S/O Status
+    Managed Queue List" --> bwagent
+
+    %% ===== QMM <-> EMS Group =====
+    QMM -- "Manage EMS instance
+    (Create, Start, Stop, etc..)
+    + Health Check" --> EMSGroup
+    EMSGroup -- "Receive Queue Created Event" --> QMM
+
+    %% ===== QMM <-> Receiver Groups =====
+    QMM -- "Server Metrics Monitoring" --> bwagent
+    bwagent -- "Execute Command" --> RecvA
+    bwagent -- "Execute Command" --> RecvB
+    EMSGroup -- "Distribute To Receiver" --> RecvA
+    EMSGroup -- "Distribute To Receiver" --> RecvB
+
+    %% ===== EMSCA =====
+    EMSCA -. "Managing EMS at CA
+    Monitoring Instances
+    Deploy New Instance
+    Register New Instance" .-> EMSGroup
+    EMSCA -.-> QMM
+    EMSCA -.-> RecvA
+    EMSCA -.-> RecvB
+    Manager --> EMSCA
+    Manager --> Sportfire
+    STR --> EMSCA
+
+    %% ===== Styling =====
+    classDef sender fill:#4472C4,color:#fff,stroke:#333
+    classDef core fill:#4472C4,color:#fff,stroke:#333,font-weight:bold
+    classDef ems fill:#4472C4,color:#fff,stroke:#333
+    classDef recv fill:#4472C4,color:#fff,stroke:#333
+    classDef db fill:#fff,color:#000,stroke:#333
+    classDef green fill:#70AD47,color:#fff,stroke:#333,font-weight:bold
+    classDef black fill:#000,color:#fff,stroke:#333,font-weight:bold
+    classDef note fill:#FFE699,color:#000,stroke:#333,text-align:left
+
+    class SenderA,SenderB,SenderC sender
+    class QMM,bwagent core
+    class EMS1,EMS2,EMS3 ems
+    class EMSNew fill:#C6E0B4,color:#000,stroke:#333
+    class RA1,RA2,RA3,RA4,RB1,RB2,RB3,RB4 recv
+    class MetaDB,CacheDB db
+    class EMSCA green
+    class Sportfire,STR black
+    class Mapping note

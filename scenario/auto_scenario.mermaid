@@ -1,0 +1,60 @@
+sequenceDiagram
+    participant RTD
+    participant MTC
+    participant OFS
+    participant MRS
+    participant PTC
+    participant RMS
+    participant BAT
+    opt wip work done
+        PTC ->> OFS: PORT_UNLOCK_REPORT
+        OFS ->> RTD: NEXT_DEST_REQ
+        RTD ->> OFS: NEXT_DEST_REP
+
+    end
+    opt available port
+        BAT ->> OFS: PORT_EMPTY_REPORT
+        OFS ->> RTD: NEXT_WIP_REQ
+        RTD ->> OFS: NEXT_WIP_REP
+    end
+    opt check before move
+        OFS ->> MRS: LOT_TRACK_IN_PREP_REQ
+        MRS ->> OFS: LOT_TRACK_IN_PREP_REP
+    end
+    opt start move
+        OFS ->> MTC: CARR_MOVE_REQ
+        MTC ->> OFS: CARR_MOVE_REP
+        MTC ->> OFS: CARR_MOVE_START
+
+    end
+    PTC ->> OFS: PORT_UNLOAD_REPORT
+    MTC ->> OFS: CARR_MOVE_REPORT
+    MTC ->> OFS: CARR_MOVE_COMP
+
+    opt arrived and check
+        PTC ->> OFS: PORT_LOCK_REPORT
+        PTC ->> OFS: CARR_ID_REPORT
+        OFS ->> RMS: RCP_CNFM_REQ
+        RMS ->> OFS: RCP_CNFM_REP
+        OFS ->> PTC: WORK_PREP_REQ
+        PTC ->> OFS: WORK_PREP_REP
+        PTC ->> OFS: WORK_PREP_REPORT
+    end
+
+    OFS ->> MRS: LOT_TRACK_IN_REQ
+    MRS ->> OFS: LOT_TRACK_IN_REP
+    OFS ->> PTC: EQP_WORK_START
+
+    opt report about work
+        PTC ->> OFS: WORK_START_REPORT
+        PTC ->> OFS: PRC_START_REPORT
+        PTC ->> OFS: PRD_START_REPORT
+        PTC ->> OFS: PRD_END_REPORT
+        PTC ->> OFS: PRC_END_REPORT
+        PTC ->> OFS: WORK_END_REPORT
+    end
+    PTC ->> OFS: PORT_UNLOCK_REPORT
+    OFS ->> RTD: NEX_DEST_REQ
+
+
+

@@ -1,0 +1,73 @@
+flowchart TB
+    BEFW-LIB-CORE["BEFW-LIB-CORE\nCore library framework level"]
+    MES-LIB-CORE["MES-LIB-CORE\n Core library for MES"]
+    MES-LIB-SPEC["MES-LIB-SPEC\nSpecification for MES"]
+    MES-LIB-DATA["MES-LIB-DATA\n Data Library for MES"]
+    MOS-LIB-CORE["MOS-LIB-CORE\nCommon Utility for MOS"]
+    MOS-LIB-DATA["MOS-LIB-DATA\nCommon Data for MOS"]
+%% Application Data Layer
+    MOS-LIB-OFS-DATA["MOS-LIB-OFS-DATA
+    Data for OFS system"]
+    MOS-LIB-RTD-DATA["MOS-LIB-RTD-DATA
+    Data for RTD system"]
+    MOS-LIB-MRS-DATA["MOS-LIB-MRS-DATA
+    Data for MRS system"]
+%% Application Core Layer
+    MOS-LIB-OFS-CORE["MOS-LIB-OFS-CORE
+    Common Utility for OFS"]
+    MOS-LIB-RTD-CORE["MOS-LIB-RTD-CORE
+    Common Utility for RTD"]
+    MOS-LIB-MRS-CORE["MOS-LIB-MRS-CORE
+    Common Utility for MRS"]
+%% Application Logic Layer
+    MOS-LIB-CMN-LOGIC["MOS-LIB-CMN-LOGIC
+    Common Logic for MOS"]
+    MOS-LIB-OFS-LOGIC["MOS-LIB-OFS-LOGIC
+    Logic for OFS system"]
+    MOS-LIB-RTD-LOGIC["MOS-LIB-RTD-LOGIC
+    Logic for RTD system"]
+    MOS-LIB-MRS-LOGIC["MOS-LIB-MRS-LOGIC
+    Logic for MRS system"]
+%% Application Layer
+    OFS-SERVICE["OFS-SERVICE"]
+    MRS-SERVICE["MRS-SERVICE"]
+    RTD-SERVICE["RTD-SERVICE"]
+%% Lib Core hierarchy
+    BEFW-LIB-CORE --> MES-LIB-CORE
+    MES-LIB-CORE --> MOS-LIB-CORE
+    MOS-LIB-CORE --> MOS-LIB-OFS-CORE
+    MOS-LIB-CORE --> MOS-LIB-RTD-CORE
+    MOS-LIB-CORE --> MOS-LIB-MRS-CORE
+%% Lib Data hierarchy
+    BEFW-LIB-CORE --> MES-LIB-DATA
+    MES-LIB-DATA --> MOS-LIB-DATA
+    MOS-LIB-DATA --> MOS-LIB-OFS-DATA
+    MOS-LIB-DATA --> MOS-LIB-RTD-DATA
+    MOS-LIB-DATA --> MOS-LIB-MRS-DATA
+%% Lib Spec hierarchy
+    BEFW-LIB-CORE --> MES-LIB-SPEC
+    MES-LIB-SPEC --> MOS-LIB-CMN-LOGIC
+%% Application Lib hierarchy
+%%% OFS Application hierarchy
+    MOS-LIB-OFS-CORE --> MOS-LIB-OFS-LOGIC
+    MES-LIB-SPEC --> MOS-LIB-OFS-LOGIC
+    MOS-LIB-OFS-DATA --> MOS-LIB-OFS-LOGIC
+%%% MRS Application hierarchy
+    MOS-LIB-MRS-CORE --> MOS-LIB-MRS-LOGIC
+    MES-LIB-SPEC --> MOS-LIB-MRS-LOGIC
+    MOS-LIB-MRS-DATA --> MOS-LIB-MRS-LOGIC
+%%% RTD Application hierarchy
+    MOS-LIB-RTD-CORE --> MOS-LIB-RTD-LOGIC
+    MES-LIB-SPEC --> MOS-LIB-RTD-LOGIC
+    MOS-LIB-RTD-DATA --> MOS-LIB-RTD-LOGIC
+%% Application hierarchy
+%%% OFS Application hierarchy
+    MOS-LIB-OFS-LOGIC --> OFS-SERVICE
+    MOS-LIB-CMN-LOGIC --> OFS-SERVICE
+%%% MRS Application hierarchy
+    MOS-LIB-MRS-LOGIC --> MRS-SERVICE
+    MOS-LIB-CMN-LOGIC --> MRS-SERVICE
+%%% RTD Application hierarchy
+    MOS-LIB-RTD-LOGIC --> RTD-SERVICE
+    MOS-LIB-CMN-LOGIC --> RTD-SERVICE
+
