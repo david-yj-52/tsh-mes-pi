@@ -15,13 +15,11 @@ flowchart TB
     end
     SPC["SPC\nStatistical Process Control"]
     RMS["RMS\nRecipe Management System"]
-
-    %% OI
+%% OI
     OP <--> MOI
     MOI --> MRS
     MOI --> OFS
-
-    %% Automatic Scenario
+%% Automatic Scenario
     RTD --> OFS
     MTC --> OFS
     PTC --> OFS
@@ -32,6 +30,5 @@ flowchart TB
     OFS --> MRS
     MOI <--> MRS
     MRS --> DB
-
-    %% Statistic Data Processing
+%% Statistic Data Processing
     MRS --> SPC
